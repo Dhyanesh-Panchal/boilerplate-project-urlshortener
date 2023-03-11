@@ -3,6 +3,7 @@ const express = require('express');
 const cors = require('cors');
 const app = express();
 const bodyParser = require('body-parser')
+const dns = require('dns')
 
 // Basic Configuration
 const port = process.env.PORT || 3000;
@@ -22,19 +23,29 @@ app.get('/api/hello', function (req, res) {
 });
 
 let urls = [], lastID = 0;
+
 const isValidURL = (url) => {
+  // dns.lookup(url, (err, address) => {
+  //   if (address) {
+  //     console.log("Invalid URL");
+  //   }
+  //   else {
+  //     console.log('Valid URL')
+  //   }
+  // })
   return /http:+/.test(url)
 }
+
 app.post('/api/shorturl', (req, res) => {
   // console.log(req.body)
   let postedURL = req.body.url;
   console.log('\n\nThe URL:', postedURL);
   if (!isValidURL(postedURL)) {
-    console.log('It is inValid');
+    // console.log('It is inValid');
     res.json({ error: 'invalid url' })
   }
   else {
-    console.log("it is valid")
+    // console.log("it is valid")
     let data;
     // Checking if URL already visited.
     if (urls.find(ele => ele.original_url == postedURL)) {
