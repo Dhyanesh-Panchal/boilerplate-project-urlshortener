@@ -3,6 +3,7 @@ const express = require('express');
 const cors = require('cors');
 const app = express();
 const bodyParser = require('body-parser')
+const validUrl = require('valid-url')
 // const dns = require('dns')
 
 // Basic Configuration
@@ -25,14 +26,6 @@ app.get('/api/hello', function (req, res) {
 let urls = [], lastID = 0;
 
 const isValidURL = (url) => {
-  // dns.lookup(url, (err, address) => {
-  //   if (address) {
-  //     console.log("Invalid URL");
-  //   }
-  //   else {
-  //     console.log('Valid URL')
-  //   }
-  // })
   return /http:+/.test(url)
 }
 
@@ -40,8 +33,8 @@ app.post('/api/shorturl', (req, res) => {
   // console.log(req.body)
   let postedURL = req.body.url;
   console.log('\n\nThe URL:', postedURL);
-  if (!isValidURL(postedURL)) {
-    // console.log('It is inValid');
+  if (!validUrl.isHttpUri(postedURL)) {
+    console.log('It is inValid');
     res.json({ error: 'invalid url' })
   }
   else {
