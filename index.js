@@ -14,26 +14,33 @@ app.use(cors());
 app.use('/public', express.static(`${process.cwd()}/public`));
 app.use(bodyParser.urlencoded({ extended: false })) // Middle ware for POST request
 
-app.get('/', function (req, res) {
+app.get('/', function(req, res) {
   res.sendFile(process.cwd() + '/views/index.html');
 });
 
 // Your first API endpoint
-app.get('/api/hello', function (req, res) {
+app.get('/api/hello', function(req, res) {
   res.json({ greeting: 'hello API' });
 });
 
 let urls = [], lastID = 0;
 
 const isValidURL = (url) => {
-  return /http:+/.test(url)
+  let check = url.slice(0, 4);
+  console.log(typeof check);
+  if (check != 'http') {
+    return true;
+  }
+  else {
+    return false;
+  }
 }
 
 app.post('/api/shorturl', (req, res) => {
   // console.log(req.body)
   let postedURL = req.body.url;
   console.log('\n\nThe URL:', postedURL);
-  if (!validUrl.isHttpUri(postedURL)) {
+  if (isValidURL(postedURL)) {
     console.log('It is inValid');
     res.json({ error: 'invalid url' })
   }
@@ -66,7 +73,7 @@ app.get('/api/shorturl/:id', (req, res) => {
   }
 })
 
-app.listen(port, function () {
+app.listen(port, function() {
   console.log(`Listening on port ${port}`);
   console.log(`http://localhost:${port}`);
 });
